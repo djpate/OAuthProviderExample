@@ -21,7 +21,7 @@
 			}
 			
 			/* now that everything is setup we run the checks */
-				$this->oauth->checkOAuthRequest("http://localhost/OAuthProviderExample/oauth",OAUTH_HTTP_METHOD_GET);
+				$this->oauth->checkOAuthRequest();
 			} catch(OAuthException $E){
 				print_r($_REQUEST);
 				echo OAuthProvider::reportProblem($E);
@@ -33,18 +33,28 @@
 		}
 		
 		public function checkConsumer($provider){
-			error_log("ok1");
-			$provider->consumer_secret = "secret";
-			return OAUTH_OK;
+			
+			$return = OAUTH_CONSUMER_KEY_UNKNOWN;
+			
+			$aConsumer = Consumer::findByKey($provider->consumer_key);
+			
+			if(is_object($aConsumer)){
+				if(!$aConsumer->isActive()){
+					$return = OAUTH_CONSUMER_KEY_REFUSED;
+				} else {
+					$provider->consumer_secret = $aConsumer->getSecretKey();
+					$return = OAUTH_OK;
+				}
+			}
+			
+			return $return;
 		}
 		
 		public function checkToken($provider){
-			error_log("ok3");
 			return OAUTH_OK;
 		}
 		
 		public function checkNonce($provider){
-			error_log("ok2");
 			return OAUTH_OK;
 		}
 		
