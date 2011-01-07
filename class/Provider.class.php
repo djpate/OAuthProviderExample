@@ -3,6 +3,9 @@
 	class Provider{
 		
 		private $oauth;
+		private $consumer;
+		private $oauth_error;
+		private $authentification_url = "http://localhost/OAuthProviderExample/login.php";
 		
 		public function __construct(){
 			
@@ -14,6 +17,9 @@
 			$this->oauth->consumerHandler(array($this,'checkConsumer'));
 			$this->oauth->timestampNonceHandler(array($this,'checkNonce'));
 			$this->oauth->tokenHandler(array($this,'checkToken'));
+			
+			/* force callback url */
+			$this->oauth->addRequiredParameter("oauth_callback");
 			
 			/* If we are issuing a request token we need to disable checkToken */
 			if(strstr($_SERVER['REQUEST_URI'],"oauth/request_token")){
@@ -32,6 +38,24 @@
 			
 		}
 		
+		public function generateRequestToken(){
+			
+			if($this->oauth_error){
+				return false;
+			}
+			
+			$token = sha1(OAuthProvider::generateToken(20,true));
+			$token_secret = sha1(OAuthProvider::generateToken(20,true));
+			
+			$callback = $this->oauth->callback;
+			
+			$this->consumer->addRequestToken($token,$token_secret,$callback);
+		
+			return "authentification_url=".$this->authentification_url."&oauth_token=".$token."&oauth_token_secret=".$token_secret."&oauth_callback_confirmed=true";
+			
+		}
+		
+		/* handlers */
 		public function checkConsumer($provider){
 			
 			$return = OAUTH_CONSUMER_KEY_UNKNOWN;
@@ -42,7 +66,8 @@
 				if(!$aConsumer->isActive()){
 					$return = OAUTH_CONSUMER_KEY_REFUSED;
 				} else {
-					$provider->consumer_secret = $aConsumer->getSecretKey();
+					$this->consumer = $aConsumer;
+					$provider->consumer_secret = $this->consumer->getSecretKey();
 					$return = OAUTH_OK;
 				}
 			}

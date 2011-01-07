@@ -5,4 +5,8 @@
 	
 	$provider = new Provider();
 	
+	if(strstr($_SERVER['REQUEST_URI'],"request_token")){
+		echo $provider->generateRequestToken();
+	}
+	
 ?>

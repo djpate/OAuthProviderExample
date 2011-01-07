@@ -7,6 +7,7 @@
 	 */
 	class Consumer implements IConsumer{
 		
+		private $id;
 		private $key;
 		private $secret;
 		private $active;
@@ -20,7 +21,8 @@
 				$consumer = new Consumer();
 				$consumer->setKey($key);
 				$consumer->setSecret($info['consumer_secret']);
-				$consumer->setActive($info['active']); 
+				$consumer->setActive($info['active']);
+				$consumer->setId($info['id']);
 			}
 			return $consumer;
 		}
@@ -37,6 +39,11 @@
 			return $this->secret;
 		}
 		
+		public function addRequestToken($token, $token_secret, $callback){
+			$pdo = Db::singleton();
+			$pdo->exec("insert into request_token (consumer_id,token,token_secret,callback_url) values (".$this->id.",'".$token."','".$token_secret."','".$callback."') ");
+		}
+		
 		/* setters */
 		
 		public function setKey($key){
@@ -49,6 +56,10 @@
 		
 		public function setActive($active){
 			$this->active = $active;
+		}
+		
+		public function setId($id){
+			$this->id = $id;
 		}
 		
 	}

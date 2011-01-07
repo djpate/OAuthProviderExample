@@ -14,6 +14,9 @@
 		/* Returns the consumer secret key */
 		public function getSecretKey();
 		
+		/* add a request token in the db */
+		public function addRequestToken($token,$token_secret,$callback_url);
+		
 	}
 
 ?>
