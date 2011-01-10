@@ -20,8 +20,15 @@
 		/* add a request token in the db */
 		public function addRequestToken($token,$token_secret,$callback_url);
 		
-		/* generate access token */
+		/* set verifier */
 		public function setVerifier($request_token,$verifier);
+		
+		/* check nonce exist */
+		public function hasNonce($nonce);
+		
+		/* Add a nonce to the nonce cache */
+		public function addNonce($nonce);
+		
 		
 	}
 
