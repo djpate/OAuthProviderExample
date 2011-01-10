@@ -55,6 +55,12 @@
 			
 		}
 		
+		public function generateVerifier($consumer,$request_token){
+			$verifier = sha1(OAuthProvider::generateToken(20,true));
+			$consumer->setVerifier($request_token,$verifier);
+			return $verifier;
+		}
+		
 		/* handlers */
 		public function checkConsumer($provider){
 			
