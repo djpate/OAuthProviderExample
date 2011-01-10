@@ -29,7 +29,6 @@
 			/* now that everything is setup we run the checks */
 				$this->oauth->checkOAuthRequest();
 			} catch(OAuthException $E){
-				print_r($_REQUEST);
 				echo OAuthProvider::reportProblem($E);
 				$this->oauth_error = true;
 			}
@@ -79,8 +78,19 @@
 			return OAUTH_OK;
 		}
 		
+		/**
+		 * Here we check the nonce & timestamp
+		 * Basicly the timestamp has to been within the last 5 minutes (you can change that of course)
+		 * And the nonce as to be unknown for a specified consumer to avoid replay attacks */
 		public function checkNonce($provider){
-			return OAUTH_OK;
+			if($this->oauth->timestamp < time() - 5*60){
+				return OAUTH_BAD_TIMESTAMP;
+			} else if($this->consumer->hasNonce($this->oauth->nonce)){
+				return OAUTH_BAD_NONCE;
+			} else {
+				$this->consumer->addNonce($this->oauth->nonce);
+				return OAUTH_OK;
+			}
 		}
 		
 	}

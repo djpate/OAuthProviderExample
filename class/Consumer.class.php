@@ -44,6 +44,21 @@
 			$pdo->exec("insert into request_token (consumer_id,token,token_secret,callback_url) values (".$this->id.",'".$token."','".$token_secret."','".$callback."') ");
 		}
 		
+		public function hasNonce($nonce){
+			$pdo = Db::singleton();
+			$check = $pdo->query("select count(*) as cnt from consumer_nonce where nonce = '".$nonce."' and consumer_id = ".$this->id)->fetch();
+			if($check['cnt']==1){
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		public function addNonce($nonce){
+			$pdo = Db::singleton();
+			$check = $pdo->exec("insert into consumer_nonce (consumer_id,timestamp,nonce) values (".$this->id.",".time().",'".$nonce."')");
+		}
+		
 		/* setters */
 		
 		public function setKey($key){

@@ -17,6 +17,13 @@
 		/* add a request token in the db */
 		public function addRequestToken($token,$token_secret,$callback_url);
 		
+		/* check nonce exist */
+		public function hasNonce($nonce);
+		
+		/* Add a nonce to the nonce cache */
+		public function addNonce($nonce);
+		
+		
 	}
 
 ?>
