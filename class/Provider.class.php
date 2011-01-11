@@ -18,11 +18,6 @@
 			$this->oauth->timestampNonceHandler(array($this,'checkNonce'));
 			$this->oauth->tokenHandler(array($this,'checkToken'));
 			
-			/* If we are issuing a request token we need to disable checkToken */
-			if(strstr($_SERVER['REQUEST_URI'],"oauth/request_token")){
-				$this->oauth->isRequestTokenEndpoint(true); 
-			}
-			
 			/* now that everything is setup we run the checks */
 				$this->oauth->checkOAuthRequest();
 			} catch(OAuthException $E){
@@ -34,7 +29,8 @@
 			
 		}
 		
-		public function forceCallback(){
+		public function setRequestTokenQuery(){
+			$this->oauth->isRequestTokenEndpoint(true); 
 			$this->oauth->addRequiredParameter("oauth_callback");
 		}
 		
@@ -56,7 +52,13 @@
 		}
 		
 		public function generateAccesstoken(){
-			return "hello";
+			$access_token = sha1(OAuthProvider::generateToken(20,true));
+			$secret = sha1(OAuthProvider::generateToken(20,true));
+			
+			$token = Token::findByToken($this->oauth->token);
+			
+			$token->changeToAccessToken($access_token,$secret);
+			return "oauth_token=".$access_token."&oauth_token_secret=".$secret;
 		}
 		
 		public function generateVerifier(){

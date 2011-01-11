@@ -6,10 +6,10 @@
 	$provider = new Provider();
 	
 	if(strstr($_SERVER['REQUEST_URI'],"request_token")){
-		$provider->forceCallback();
+		$provider->setRequestTokenQuery();
 		echo $provider->generateRequestToken();
 	} else if(strstr($_SERVER['REQUEST_URI'],"access_token")){
-		$provider->generateAccessToken();
+		echo $provider->generateAccessToken();
 	}
 	
 ?>

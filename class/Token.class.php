@@ -10,6 +10,8 @@
 		protected $verifier;
 		protected $pdo;
 		
+		/* static functions */
+		
 		public static function createRequestToken(IConsumer $consumer,$token,$tokensecret,$callback){
 			$pdo = Db::singleton();
 			$pdo->exec("insert into token (type,consumer_id,token,token_secret,callback_url) values (1,".$consumer->getId().",'".$token."','".$tokensecret."','".$callback."') ");
@@ -27,15 +29,6 @@
 			return $ret;
 		}
 		
-		public function setVerifier($verifier){
-			$this->pdo->exec("update token set verifier = '".$verifier."' where id = ".$this->id);
-			$this->verifier = $verifier;
-		}
-		
-		public function setUser(IUser $user){
-			$this->pdo->exec("update token set user_id = '".$user->getId()."' where id = ".$this->id);
-			$this->user = $user;
-		}
 		
 		public function __construct($id=0){
 			$this->pdo = Db::singleton();
@@ -54,6 +47,29 @@
 			$this->callback = $info['callback_url'];
 			$this->verifier = $info['verifier'];
 		}
+		
+		public function changeToAccessToken($token,$secret){
+			if($this->isRequest()){
+				$this->pdo->exec("update token set type = 2, verifier = '', callback_url = '', token = '".$token."', token_secret = '".$secret."' where id = ".$this->id);	
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		/* some setters */
+		
+		public function setVerifier($verifier){
+			$this->pdo->exec("update token set verifier = '".$verifier."' where id = ".$this->id);
+			$this->verifier = $verifier;
+		}
+		
+		public function setUser(IUser $user){
+			$this->pdo->exec("update token set user_id = '".$user->getId()."' where id = ".$this->id);
+			$this->user = $user;
+		}
+		
+		/* some getters */
 		
 		public function isRequest(){
 			return $this->type == 1;
