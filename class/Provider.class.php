@@ -18,9 +18,6 @@
 			$this->oauth->timestampNonceHandler(array($this,'checkNonce'));
 			$this->oauth->tokenHandler(array($this,'checkToken'));
 			
-			/* force callback url */
-			$this->oauth->addRequiredParameter("oauth_callback");
-			
 			/* If we are issuing a request token we need to disable checkToken */
 			if(strstr($_SERVER['REQUEST_URI'],"oauth/request_token")){
 				$this->oauth->isRequestTokenEndpoint(true); 
@@ -37,6 +34,10 @@
 			
 		}
 		
+		public function forceCallback(){
+			$this->oauth->addRequiredParameter("oauth_callback");
+		}
+		
 		public function generateRequestToken(){
 			
 			if($this->oauth_error){
@@ -48,10 +49,14 @@
 			
 			$callback = $this->oauth->callback;
 			
-			RequestToken::create($this->consumer, $token, $token_secret, $callback);
+			Token::createRequestToken($this->consumer, $token, $token_secret, $callback);
 		
 			return "authentification_url=".$this->authentification_url."&oauth_token=".$token."&oauth_token_secret=".$token_secret."&oauth_callback_confirmed=true";
 			
+		}
+		
+		public function generateAccesstoken(){
+			return "hello";
 		}
 		
 		public function generateVerifier(){
@@ -81,7 +86,18 @@
 		}
 		
 		public function checkToken($provider){
-			return OAUTH_OK;
+			
+			$token = Token::findByToken($provider->token);
+			
+			if(is_null($token)){ // token not found
+				return OAUTH_TOKEN_REJECTED;
+			} elseif($token->getType() == 1 && $token->getVerifier() != $provider->verifier){ // bad verifier for request token
+				return OAUTH_VERIFIER_INVALID;
+			} else {
+				$provider->token_secret = $token->getSecret();
+				return OAUTH_OK;
+			}
+			
 		}
 		
 		/**

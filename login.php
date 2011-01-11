@@ -5,8 +5,8 @@ function __autoload($name){
 }
 
 if(isset($_REQUEST['oauth_token'])){
-	$request_token = RequestToken::findByToken($_REQUEST['oauth_token']);
-	if(is_object($request_token)){
+	$request_token = Token::findByToken($_REQUEST['oauth_token']);
+	if(is_object($request_token)&&$request_token->isRequest()){
 		if(!isset($_POST['login'])){
 		?>
 			<form method=post>
@@ -15,9 +15,13 @@ if(isset($_REQUEST['oauth_token'])){
 			</form>
 		<? 
 		} else {
-			if(User::exist($_POST['login'])){
+			$user = User::exist($_POST['login']);
+			if(is_object($user)){
 				$request_token->setVerifier(Provider::generateVerifier($_REQUEST['oauth_token']));
-				header("location: ".$request_token->getCallback()."?&oauth_token=".$_REQUEST['oauth_token']."&verifier=".$request_token->getVerifier());
+				$request_token->setUser($user);
+				header("location: ".$request_token->getCallback()."?&oauth_token=".$_REQUEST['oauth_token']."&verifier_token=".$request_token->getVerifier());
+			} else {
+				echo "User not found !";
 			}
 		}
 	} else {
