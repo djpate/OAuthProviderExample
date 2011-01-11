@@ -17,17 +17,13 @@
 		/* Returns the consumer secret key */
 		public function getSecretKey();
 		
-		/* add a request token in the db */
-		public function addRequestToken($token,$token_secret,$callback_url);
-		
-		/* set verifier */
-		public function setVerifier($request_token,$verifier);
-		
 		/* check nonce exist */
 		public function hasNonce($nonce);
 		
 		/* Add a nonce to the nonce cache */
 		public function addNonce($nonce);
+		
+		public function getId();
 		
 		
 	}

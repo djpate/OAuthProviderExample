@@ -5,8 +5,8 @@ function __autoload($name){
 }
 
 if(isset($_REQUEST['oauth_token'])){
-	$consumer = Consumer::findByRequestToken($_REQUEST['oauth_token']);
-	if(is_object($consumer)){
+	$request_token = RequestToken::findByToken($_REQUEST['oauth_token']);
+	if(is_object($request_token)){
 		if(!isset($_POST['login'])){
 		?>
 			<form method=post>
@@ -16,7 +16,8 @@ if(isset($_REQUEST['oauth_token'])){
 		<? 
 		} else {
 			if(User::exist($_POST['login'])){
-				$verifier = Provider::generateVerifier($consumer,$_REQUEST['oauth_token']);
+				$request_token->setVerifier(Provider::generateVerifier($_REQUEST['oauth_token']));
+				header("location: ".$request_token->getCallback()."?&oauth_token=".$_REQUEST['oauth_token']."&verifier=".$request_token->getVerifier());
 			}
 		}
 	} else {
