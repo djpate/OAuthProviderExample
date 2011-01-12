@@ -24,17 +24,6 @@
 			return $consumer;
 		}
 		
-		public static function findByRequestToken($token){
-			$consumer = null;
-			$pdo = Db::singleton();
-			$info = $pdo->query("select consumer_id from request_token where token = '".$token."'"); // this is not safe !
-			if($info->rowCount()==1){
-				$info = $info->fetch();
-				$consumer = new Consumer($info['consumer_id']);
-			}
-			return $consumer;
-		}
-		
 		public function __construct($id = 0){
 			$this->pdo = Db::singleton();
 			if($id != 0){
@@ -52,11 +41,18 @@
 		}
 		
 		public static function create($key,$secret){
-			
+			$pdo = Db::singleton();
+			$pdo->exec("insert into consumer (consumer_key,consumer_secret,active) values ('".$key."','".$secret."',1)");
+			$consumer = new Consumer($pdo->lastInsertId());
+			return $consumer;
 		}
 		
 		public function isActive(){
 			return $this->active;
+		}
+		
+		public function getKey(){
+			return $this->key;
 		}
 		
 		public function getSecretKey(){

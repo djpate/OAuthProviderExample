@@ -7,6 +7,12 @@
 		private $oauth_error;
 		private $authentification_url = "http://localhost/OAuthProviderExample/oauth/login.php";
 		
+		public static function createConsumer(){
+			$key = sha1(OAuthProvider::generateToken(20,true));
+			$secret = sha1(OAuthProvider::generateToken(20,true));
+			return Consumer::create($key,$secret);
+		}
+		
 		public function __construct(){
 			
 			/* create our instance */
@@ -70,6 +76,11 @@
 		 * In that process it also removes the request token used to get that access token
 		 */
 		public function generateAccesstoken(){
+			
+			if($this->oauth_error){
+				return false;
+			}
+			
 			$access_token = sha1(OAuthProvider::generateToken(20,true));
 			$secret = sha1(OAuthProvider::generateToken(20,true));
 			

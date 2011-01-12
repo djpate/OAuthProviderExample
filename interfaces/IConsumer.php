@@ -11,6 +11,9 @@
 		/* Returns if the consumer is active */
 		public function isActive();
 		
+		/* Returns the consumer key */
+		public function getKey();
+		
 		/* Returns the consumer secret key */
 		public function getSecretKey();
 		
