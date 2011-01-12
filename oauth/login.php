@@ -1,7 +1,7 @@
 <?
 
 function __autoload($name){
-		require("class/".$name.".class.php");
+		require("../class/".$name.".class.php");
 }
 
 if(isset($_REQUEST['oauth_token'])){
