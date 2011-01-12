@@ -27,7 +27,12 @@
 		
 		public function checkRequest(){
 			/* now that everything is setup we run the checks */
-			$this->oauth->checkOAuthRequest();
+			try{
+				$this->oauth->checkOAuthRequest();
+			} catch(OAuthException $E){
+				echo OAuthProvider::reportProblem($E);
+				$this->oauth_error = true;
+			}
 		}
 		
 		public function setRequestTokenQuery(){
@@ -69,7 +74,6 @@
 		
 		/* handlers */
 		public function checkConsumer($provider){
-			
 			$return = OAUTH_CONSUMER_KEY_UNKNOWN;
 			
 			$aConsumer = Consumer::findByKey($provider->consumer_key);
@@ -79,7 +83,6 @@
 					$return = OAUTH_CONSUMER_KEY_REFUSED;
 				} else {
 					$this->consumer = $aConsumer;
-					$this->consumer->addNonce($this->oauth->nonce);
 					$provider->consumer_secret = $this->consumer->getSecretKey();
 					$return = OAUTH_OK;
 				}
@@ -89,7 +92,6 @@
 		}
 		
 		public function checkToken($provider){
-			
 			$token = Token::findByToken($provider->token);
 			
 			if(is_null($token)){ // token not found
@@ -108,10 +110,12 @@
 		 * Basicly the timestamp has to been within the last 5 minutes (you can change that of course)
 		 * And the nonce as to be unknown for a specified consumer to avoid replay attacks */
 		public function checkNonce($provider){
-			//TODO OAUTH_BAD_NONCE;
 			if($this->oauth->timestamp < time() - 5*60){
 				return OAUTH_BAD_TIMESTAMP;
+			} elseif($this->consumer->hasNonce($provider->nonce)) {
+				return OAUTH_BAD_NONCE;
 			} else {
+				$this->consumer->addNonce($this->oauth->nonce);
 				return OAUTH_OK;
 			}
 		}
