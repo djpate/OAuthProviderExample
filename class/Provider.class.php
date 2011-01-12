@@ -18,15 +18,16 @@
 			$this->oauth->timestampNonceHandler(array($this,'checkNonce'));
 			$this->oauth->tokenHandler(array($this,'checkToken'));
 			
-			/* now that everything is setup we run the checks */
-				$this->oauth->checkOAuthRequest();
 			} catch(OAuthException $E){
 				echo OAuthProvider::reportProblem($E);
 				$this->oauth_error = true;
 			}
 			
-			
-			
+		}
+		
+		public function checkRequest(){
+			/* now that everything is setup we run the checks */
+			$this->oauth->checkOAuthRequest();
 		}
 		
 		public function setRequestTokenQuery(){

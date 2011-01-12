@@ -6,7 +6,9 @@
 				$oauth_client->enableDebug();
 				$oauth_client->setToken($_POST['oauth_token'],$_POST['oauth_token_secret']);
 				$info = $oauth_client->getAccessToken("http://localhost/OAuthProviderExample/oauth/access_token",null,$_POST['verifier_token']);
-				print_r($info);
+				echo "<h1>Congrats !</h1>";
+				echo "<strong>AccessToken</strong> ".$info['oauth_token']."<br />";
+				echo "<strong>AccessToken Secret</strong> ".$info['oauth_token_secret'];
 			} catch(OAuthException $E){
 				echo print_r($E->debugInfo);
 			}
