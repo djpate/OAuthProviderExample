@@ -5,6 +5,7 @@
 		private $oauth;
 		private $consumer;
 		private $oauth_error;
+		private $user;
 		private $authentification_url = "http://localhost/OAuthProviderExample/oauth/login.php";
 		
 		public static function createConsumer(){
@@ -165,6 +166,14 @@
 			} else {
 				$this->consumer->addNonce($this->oauth->nonce);
 				return OAUTH_OK;
+			}
+		}
+		
+		public function getUser(){
+			if(is_object($this->user)){
+				return $this->user;
+			} else {
+				throw new Exception("User not authentificated");
 			}
 		}
 		

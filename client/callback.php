@@ -9,6 +9,7 @@
 				echo "<h1>Congrats !</h1>";
 				echo "<strong>AccessToken</strong> ".$info['oauth_token']."<br />";
 				echo "<strong>AccessToken Secret</strong> ".$info['oauth_token_secret'];
+				echo "<a href=\"apicall.php?token=".$info['oauth_token']."&token_secret=".$info['oauth_token_secret']."\">get your user id with an api call</a>";
 			} catch(OAuthException $E){
 				echo print_r($E->debugInfo);
 			}

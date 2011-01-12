@@ -20,11 +20,13 @@
 		<strong>Secret : </strong> <?php echo $consumer->getSecretKey()?>
 		<?
 	} else if(strstr($_SERVER['REQUEST_URI'],"api/user")){
-		/* this is a basic api call that will return the login of an authenticated user */
+		/* this is a basic api call that will return the id of an authenticated user */
 		$provider->checkRequest();
-		
-		
-		
+		try {
+			echo $provider->getUser()->getId();
+		} catch(Exception $E){
+			echo $E;
+		}
 	}
 	
 ?>

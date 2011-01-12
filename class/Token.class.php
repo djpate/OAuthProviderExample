@@ -1,5 +1,6 @@
 <?php
-	class Token{
+	require(dirname(__FILE__)."/../interfaces/IToken.php");
+	class Token implements IToken{
 		
 		protected $id;
 		protected $type;
@@ -102,8 +103,7 @@
 		}
 		
 		public function getUser(){
-			return new User($this->user);
-		}
+			return $this->user;
 		}
 		
 	}
