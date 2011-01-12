@@ -8,6 +8,6 @@
 		echo "<strong>Request token secret</strong> : ".$info['oauth_token_secret']."<br />";
 		echo "to authenticate go <a href=\"".$info['authentification_url']."?oauth_token=".$info['oauth_token']."\">here</a>";
 	} catch(OAuthException $E){
-		echo $E;
+		echo "<pre>".print_r($E->debugInfo,true)."</pre>";
 	}
 ?>

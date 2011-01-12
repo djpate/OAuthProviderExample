@@ -12,7 +12,6 @@
 	} else if(strstr($_SERVER['REQUEST_URI'],"access_token")){
 		$provider->checkRequest();
 		echo $provider->generateAccessToken();
-		
 	}
 	
 ?>
