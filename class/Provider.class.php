@@ -5,7 +5,7 @@
 		private $oauth;
 		private $consumer;
 		private $oauth_error;
-		private $authentification_url = "http://localhost/OAuthProviderExample/login.php";
+		private $authentification_url = "http://localhost/OAuthProviderExample/oauth/login.php";
 		
 		public function __construct(){
 			
