@@ -25,7 +25,6 @@
 		
 		public function getId();
 		
-		
 	}
 
 ?>

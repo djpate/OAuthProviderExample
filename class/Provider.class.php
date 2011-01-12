@@ -139,6 +139,10 @@
 			} elseif($token->getType() == 1 && $token->getVerifier() != $provider->verifier){ // bad verifier for request token
 				return OAUTH_VERIFIER_INVALID;
 			} else {
+				if($token->getType() == 2){
+					/* if this is an access token we register the user to the provider for use in our api */
+					$this->user = $token->getUser();
+				}
 				$provider->token_secret = $token->getSecret();
 				return OAUTH_OK;
 			}

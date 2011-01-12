@@ -8,6 +8,7 @@
 		protected $token_secret;
 		protected $callback;
 		protected $verifier;
+		protected $user;
 		protected $pdo;
 		
 		/* static functions */
@@ -46,6 +47,11 @@
 			$this->consumer = new Consumer($info['consumer_id']);
 			$this->callback = $info['callback_url'];
 			$this->verifier = $info['verifier'];
+			if($info['user_id'] != 0){
+				$this->user = new User($info['user_id']);
+			} else {
+				$this->user = 0;
+			}
 		}
 		
 		public function changeToAccessToken($token,$secret){
@@ -93,6 +99,11 @@
 		
 		public function getSecret(){
 			return $this->token_secret;
+		}
+		
+		public function getUser(){
+			return new User($this->user);
+		}
 		}
 		
 	}
