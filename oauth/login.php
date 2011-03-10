@@ -17,7 +17,7 @@ if(isset($_REQUEST['oauth_token'])){
 		} else {
 			$user = User::exist($_POST['login']);
 			if(is_object($user)){
-				$request_token->setVerifier(Provider::generateVerifier($_REQUEST['oauth_token']));
+				$request_token->setVerifier(Provider::generateVerifier());
 				$request_token->setUser($user);
 				header("location: ".$request_token->getCallback()."?&oauth_token=".$_REQUEST['oauth_token']."&verifier_token=".$request_token->getVerifier());
 			} else {
