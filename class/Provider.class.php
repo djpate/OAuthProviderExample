@@ -161,7 +161,7 @@
 		public function checkNonce($provider){
 			if($this->oauth->timestamp < time() - 5*60){
 				return OAUTH_BAD_TIMESTAMP;
-			} elseif($this->consumer->hasNonce($provider->nonce)) {
+			} elseif($this->consumer->hasNonce($provider->nonce,$this->oauth->timestamp)) {
 				return OAUTH_BAD_NONCE;
 			} else {
 				$this->consumer->addNonce($this->oauth->nonce);

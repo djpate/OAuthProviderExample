@@ -63,8 +63,8 @@
 			return $this->id;
 		}
 		
-		public function hasNonce($nonce){
-			$check = $this->pdo->query("select count(*) as cnt from consumer_nonce where nonce = '".$nonce."' and consumer_id = ".$this->id)->fetch();
+		public function hasNonce($nonce,$timestamp){
+			$check = $this->pdo->query("select count(*) as cnt from consumer_nonce where timestamp = '".$timestamp."' and nonce = '".$nonce."' and consumer_id = ".$this->id)->fetch();
 			if($check['cnt']==1){
 				return true;
 			} else {
