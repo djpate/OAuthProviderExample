@@ -18,7 +18,7 @@
 		public function getSecretKey();
 		
 		/* check if nonce exist for a specified consumer */
-		public function hasNonce($nonce);
+		public function hasNonce($nonce,$timestamp);
 		
 		/* Add a nonce to the nonce cache */
 		public function addNonce($nonce);
