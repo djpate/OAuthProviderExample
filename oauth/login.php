@@ -19,7 +19,7 @@ if(isset($_REQUEST['oauth_token'])){
 			if(is_object($user)){
 				$request_token->setVerifier(Provider::generateVerifier());
 				$request_token->setUser($user);
-				header("location: ".$request_token->getCallback()."?&oauth_token=".$_REQUEST['oauth_token']."&verifier_token=".$request_token->getVerifier());
+				header("location: ".$request_token->getCallback()."?&oauth_token=".$_REQUEST['oauth_token']."&oauth_verifier=".$request_token->getVerifier());
 			} else {
 				echo "User not found !";
 			}
