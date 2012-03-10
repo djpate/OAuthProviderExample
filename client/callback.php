@@ -25,7 +25,7 @@
 				<span>This is not passed by url, a real client would have stored this somewhere, you can get it from the db</span>
 				<br />
 				<label>verifier</label>
-				<input type="text" name="verifier_token" value="<?=$_REQUEST['verifier_token']?>" />
+				<input type="text" name="oauth_verifier" value="<?=$_REQUEST['oauth_verifier']?>" />
 				<input type="submit" value="OK">
 			</form>
 		<?
